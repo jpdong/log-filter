@@ -15,10 +15,17 @@ public class Main {
             if (dirPath == null || dirPath.length() == 0) {
                 Log.d(TAG, "path is null");
             } else {
+                if (args.length > 1 && args[1] != null) {
+                    LogData.sLogType = Integer.parseInt(args[1]);
+                }
                 MapReduce mapReduce = new MapReduce();
                 Scanner scanner = new Scanner(mapReduce);
                 scanner.scan(dirPath);
                 String reportString = mapReduce.reduce();
+                StringBuilder stringBuilder = new StringBuilder(reportString);
+                stringBuilder.append("\n");
+                stringBuilder.append("total count:" + LogData.sTotalOutputCount);
+                reportString = stringBuilder.toString();
                 File reportFile = new File(dirPath + File.separator + "Crash.txt");
                 if (!reportFile.exists()) {
                     try {

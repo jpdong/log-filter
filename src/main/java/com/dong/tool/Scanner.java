@@ -27,7 +27,9 @@ public class Scanner {
             }
         } else if (file.isFile()) {
             LogData logData = readFromFile(file);
-            mMapReduce.map(logData);
+            if (logData != null) {
+                mMapReduce.map(logData);
+            }
         }
     }
 
@@ -39,15 +41,25 @@ public class Scanner {
             bufferedReader = new BufferedReader(new FileReader(file));
             String line = null;
             stringBuilder = new StringBuilder();
+            boolean isCodeLineOpen = false;
             while ((line = bufferedReader.readLine()) != null) {
                 if (data.key == null) {
                     if (line.startsWith("at") && line.contains("com.exce")) {
                         data.key = line;
                     }
+                    if (line.contains("10019")) {
+                        isCodeLineOpen = true;
+                    }
                 }
                 stringBuilder.append(line);
                 stringBuilder.append("\n");
             }
+            if (LogData.sLogType == LogData.LOG_TYPE_ONLY_CODE_LINE_OPEN && isCodeLineOpen == false) {
+                return null;
+            }
+            LogData.sTotalOutputCount++;
+            System.out.print("\r");
+            System.out.print("record count:" + LogData.sTotalOutputCount);
             data.value = stringBuilder.toString();
             if (data.key == null) {
                 int traceIndex = stringBuilder.indexOf("java");
