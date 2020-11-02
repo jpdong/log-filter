@@ -6,6 +6,7 @@ public class LogData {
 
     public static int sLogType = 0;
     public static int sTotalOutputCount = 0;
+    public static int sEmptyNum = 0;
 
 
     String key;

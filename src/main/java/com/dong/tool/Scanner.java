@@ -26,9 +26,13 @@ public class Scanner {
                 }
             }
         } else if (file.isFile()) {
-            LogData logData = readFromFile(file);
-            if (logData != null) {
-                mMapReduce.map(logData);
+            if (file.length() < 30) {
+                LogData.sEmptyNum ++;
+            } else {
+                LogData logData = readFromFile(file);
+                if (logData != null) {
+                    mMapReduce.map(logData);
+                }
             }
         }
     }
@@ -44,7 +48,7 @@ public class Scanner {
             boolean isCodeLineOpen = false;
             while ((line = bufferedReader.readLine()) != null) {
                 if (data.key == null) {
-                    if (line.startsWith("at") && line.contains("com.exce")) {
+                    if (line.contains("at") && line.contains("com.exce")) {
                         data.key = line;
                     }
                     if (line.contains("10019")) {
@@ -59,7 +63,7 @@ public class Scanner {
             }
             LogData.sTotalOutputCount++;
             System.out.print("\r");
-            System.out.print("record count:" + LogData.sTotalOutputCount);
+            System.out.print(String.format("record count:%s empty file:%s",LogData.sTotalOutputCount,LogData.sEmptyNum));
             data.value = stringBuilder.toString();
             if (data.key == null) {
                 int traceIndex = stringBuilder.indexOf("java");
@@ -78,6 +82,7 @@ public class Scanner {
                     }
                 }
             }
+            data.key = data.key.replace("@[0-9a-z]+ ","");
         } catch (IOException e) {
             e.printStackTrace();
         } finally {

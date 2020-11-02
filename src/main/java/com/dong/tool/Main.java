@@ -35,7 +35,7 @@ public class Main {
                     }
                 }
                 reportToFile(reportFile,reportString);
-                System.out.println(reportFile.getAbsolutePath());
+                System.out.println("\n" + reportFile.getAbsolutePath());
             }
         }
         /*String dirPath = "F:\\Work\\Java\\debug\\2020-04-26\\com.excean.gspace\\515";
